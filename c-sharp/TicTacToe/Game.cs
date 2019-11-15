@@ -20,32 +20,9 @@
             _board.AddTileAt(symbol, x, y);
         }
 
-        private bool CheckWinningRow(int rowNumber)
-        {
-            var firstSymbol = _board.TileAt(rowNumber, 0);
-            var secondSymbol = _board.TileAt(rowNumber, 1);
-            var thirdSymbol = _board.TileAt(rowNumber, 2);
-
-            if (firstSymbol != Symbol.Empty)
-            {
-                return firstSymbol == secondSymbol &&
-                       thirdSymbol == secondSymbol;
-            }
-
-            return false;
-        }
-
         public char Winner()
         {
-            for (var column = 0; column < 3; ++column)
-            {
-                if (CheckWinningRow(column))
-                {
-                    return Steve.ConvertSymbol(_board.TileAt(column, 0));
-                }
-            }
-
-            return Steve.ConvertSymbol(Symbol.Empty);
+            return Steve.ConvertSymbol(_board.Winner());
         }
     }
 }
