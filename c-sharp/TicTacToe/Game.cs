@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TicTacToe
+﻿namespace TicTacToe
 {
     public class Game
     {
@@ -9,46 +7,11 @@ namespace TicTacToe
 
         public void Play(char symbol, int x, int y)
         {
-            var symbolAsEnum = CharToSymbol(symbol);
-
-            ValidatePlay(symbolAsEnum, x, y);
+            var symbolAsEnum = Steve.ConvertSymbol(symbol);
+            var play = new Play(symbolAsEnum, x, y);
+            play.Validate(_lastSymbol, _board);
 
             UpdateGameState(symbolAsEnum, x, y);
-        }
-
-        private void ValidatePlay(Symbol symbol, int x, int y)
-        {
-            ValidateFirstPlayer(symbol);
-            ValidateNextPlayer(symbol);
-            ValidatePosition(x, y);
-        }
-
-        private void ValidateFirstPlayer(Symbol symbol)
-        {
-            var isFirstMove = _lastSymbol == Symbol.Empty;
-            var isPlayerX = symbol == Symbol.O;
-            if(isFirstMove && isPlayerX)
-            {
-                throw new Exception("Invalid first player");
-            }
-        }
-
-        private void ValidateNextPlayer(Symbol symbol)
-        {
-            var isPlayerRepeated = symbol == _lastSymbol;
-            if (isPlayerRepeated)
-            {
-                throw new Exception("Invalid next player");
-            }
-        }
-
-        private void ValidatePosition(int x, int y)
-        {
-            var isOnAlreadyPlayedTile = !_board.IsEmptyTile(x, y);
-            if (isOnAlreadyPlayedTile)
-            {
-                throw new Exception("Invalid position");
-            }
         }
 
         private void UpdateGameState(Symbol symbol, int x, int y)
@@ -78,21 +41,11 @@ namespace TicTacToe
             {
                 if (CheckWinningRow(column))
                 {
-                    return SymbolToChar(_board.TileAt(column, 0));
+                    return Steve.ConvertSymbol(_board.TileAt(column, 0));
                 }
             }
 
-            return SymbolToChar(Symbol.Empty);
-        }
-
-        private Symbol CharToSymbol(char c)
-        {
-            return (Symbol)c;
-        }
-
-        private char SymbolToChar(Symbol symbol)
-        {
-            return (char)symbol;
+            return Steve.ConvertSymbol(Symbol.Empty);
         }
     }
 }
