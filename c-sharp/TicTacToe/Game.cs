@@ -9,27 +9,18 @@ namespace TicTacToe
 
         public void Play(char symbol, int x, int y)
         {
-            var tile = new Tile
-            {
-                Symbol = CharToSymbol(symbol),
-                X = x,
-                Y = y
-            };
-            Play(tile);
+            var symbolAsEnum = CharToSymbol(symbol);
+
+            ValidatePlay(symbolAsEnum, x, y);
+
+            UpdateGameState(symbolAsEnum, x, y);
         }
 
-        private void Play(Tile tile)
+        private void ValidatePlay(Symbol symbol, int x, int y)
         {
-            ValidatePlay(tile);
-
-            UpdateGameState(tile);
-        }
-
-        private void ValidatePlay(Tile tile)
-        {
-            ValidateFirstPlayer(tile.Symbol);
-            ValidateNextPlayer(tile.Symbol);
-            ValidatePosition(tile);
+            ValidateFirstPlayer(symbol);
+            ValidateNextPlayer(symbol);
+            ValidatePosition(x, y);
         }
 
         private void ValidateFirstPlayer(Symbol symbol)
@@ -51,26 +42,26 @@ namespace TicTacToe
             }
         }
 
-        private void ValidatePosition(Tile tile)
+        private void ValidatePosition(int x, int y)
         {
-            var isOnAlreadyPlayedTile = !_board.IsEmptyTile(tile.X, tile.Y);
+            var isOnAlreadyPlayedTile = !_board.IsEmptyTile(x, y);
             if (isOnAlreadyPlayedTile)
             {
                 throw new Exception("Invalid position");
             }
         }
 
-        private void UpdateGameState(Tile tile)
+        private void UpdateGameState(Symbol symbol, int x, int y)
         {
-            _lastSymbol = tile.Symbol;
-            _board.AddTileAt(tile);
+            _lastSymbol = symbol;
+            _board.AddTileAt(symbol, x, y);
         }
 
         private bool CheckWinningRow(int rowNumber)
         {
-            var firstSymbol = _board.TileAt(rowNumber, 0).Symbol;
-            var secondSymbol = _board.TileAt(rowNumber, 1).Symbol;
-            var thirdSymbol = _board.TileAt(rowNumber, 2).Symbol;
+            var firstSymbol = _board.TileAt(rowNumber, 0);
+            var secondSymbol = _board.TileAt(rowNumber, 1);
+            var thirdSymbol = _board.TileAt(rowNumber, 2);
 
             if (firstSymbol != Symbol.Empty)
             {
@@ -83,11 +74,11 @@ namespace TicTacToe
 
         public char Winner()
         {
-            for (var row = 0; row < 3; ++row)
+            for (var column = 0; column < 3; ++column)
             {
-                if (CheckWinningRow(row))
+                if (CheckWinningRow(column))
                 {
-                    return SymbolToChar(_board.TileAt(row, 0).Symbol);
+                    return SymbolToChar(_board.TileAt(column, 0));
                 }
             }
 
