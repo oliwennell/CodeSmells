@@ -3,7 +3,7 @@
     public class Game
     {
         private Symbol _lastSymbol = Symbol.Empty;
-        private Board _board = new Board();
+        private readonly Board _board = new Board();
 
         public void Play(char symbol, int x, int y)
         {
